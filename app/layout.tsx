@@ -3,7 +3,8 @@ import { Geist, Geist_Mono, Space_Grotesk, Noto_Sans } from "next/font/google";
 import "./globals.css";
 import ReduxProvider from "@/store/provider";
 import Navbar from "@/components/common/Navbar";
-// import Footer from "@/components/common/Footer";
+import { ThemeProvider } from "@/components/common/ThemeProvider";
+import Footer from "@/components/common/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,7 +39,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         {/* ✅ Material Symbols */}
         <link
@@ -49,13 +50,15 @@ export default function RootLayout({
       <body
         className={`${spaceGrotesk.variable} ${notoSans.variable} min-h-screen flex flex-col antialiased`}
       >
-        <ReduxProvider>
-          <Navbar />
+        <ThemeProvider>
+          <ReduxProvider>
+            <Navbar />
 
-          <main className="flex-1">{children}</main>
+            <main className="flex-1">{children}</main>
 
-          {/* <Footer /> */}
-        </ReduxProvider>
+            <Footer />
+          </ReduxProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

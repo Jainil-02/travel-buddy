@@ -1,20 +1,58 @@
-import { Card } from "@/components/ui/card";
+"use client";
+
 import { LucideIcon } from "lucide-react";
+
+interface FeatureCardProps {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  iconBgClass?: string;
+  iconColorClass?: string;
+}
 
 export default function FeatureCard({
   icon: Icon,
   title,
   description,
-}: {
-  icon: LucideIcon;
-  title: string;
-  description: string;
-}) {
+  iconBgClass = "bg-primary/10",
+  iconColorClass = "text-primary",
+}: FeatureCardProps) {
   return (
-    <Card className="p-6 hover:shadow-lg transition">
-      <Icon className="w-10 h-10 text-primary mb-4" />
-      <h3 className="font-bold">{title}</h3>
-      <p className="text-sm text-muted-foreground mt-2">{description}</p>
-    </Card>
+    <div
+      className="
+    group cursor-pointer
+    bg-card
+    border border-border
+    rounded-2xl
+    p-5 md:p-6
+    transition-all duration-300 ease-out
+    hover:border-primary/50
+    hover:shadow-xl
+    hover:-translate-y-1
+    hover:scale-[1.02]
+  "
+    >
+      {/* Icon */}
+      <div
+        className={`
+    size-12 rounded-xl
+    flex items-center justify-center
+    mb-4
+    transition-all duration-300
+    group-hover:scale-110
+    group-hover:rotate-[-2deg]
+    ${iconBgClass}
+    ${iconColorClass}
+  `}
+      >
+        <Icon className="w-6 h-6" />
+      </div>
+
+      {/* Content */}
+      <h3 className="font-semibold text-lg text-foreground">{title}</h3>
+      <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
+        {description}
+      </p>
+    </div>
   );
 }

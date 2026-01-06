@@ -1,29 +1,132 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Plane } from "lucide-react"
+import { useState } from "react";
+import { Compass, Menu, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import ThemeToggle from "./ThemeToggle";
+
+const navLinks = [
+  { label: "Destinations", href: "#" },
+  { label: "Planning Tools", href: "#" },
+  { label: "Community", href: "#" },
+  { label: "About", href: "#" },
+];
 
 export default function Navbar() {
+  const [open, setOpen] = useState(false);
+
   return (
-    <header className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b">
-      <div className="max-w-[1280px] mx-auto px-4 h-16 flex items-center justify-between">
-        <div className="flex items-center gap-2 font-bold text-xl">
-          <Plane className="text-primary" />
-          Travel Buddy
-        </div>
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
+      <div className="max-w-[1680px] mx-auto px-4 md:px-8">
+        <div className="flex items-center justify-between h-16 md:h-20">
+          {/* Logo */}
+          <div className="flex items-center gap-3 shrink-0">
+            <Compass className="w-7 h-7 text-primary" />
+            <span className="text-xl font-bold tracking-tight text-foreground whitespace-nowrap">
+              Travel Buddy
+            </span>
+          </div>
 
-        <nav className="hidden md:flex gap-8 text-sm text-muted-foreground">
-          <a href="#">Destinations</a>
-          <a href="#">Planning Tools</a>
-          <a href="#">Community</a>
-          <a href="#">About</a>
-        </nav>
+          {/* Desktop Nav */}
+          <nav className="hidden md:flex flex-1 justify-center items-center gap-8">
+            {navLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
 
-        <div className="flex gap-3">
-          <Button variant="ghost">Sign In</Button>
-          <Button>Join Premium</Button>
+          {/* Actions */}
+          <div className="flex items-center gap-2 shrink-0">
+            <ThemeToggle />
+
+            {/* Desktop-only buttons */}
+            <Button
+              variant="ghost"
+              className="hidden md:inline-flex text-foreground bg-muted/80 hover:bg-muted/40 font-semibold"
+            >
+              Sign In
+            </Button>
+
+            <Button className="hidden md:inline-flex rounded-xl font-semibold">
+              Join Premium
+            </Button>
+
+            {/* Mobile Hamburger */}
+            <button
+              className="md:hidden p-2 rounded-lg hover:bg-muted transition-colors"
+              onClick={() => setOpen(true)}
+              aria-label="Open menu"
+            >
+              <Menu className="w-6 h-6 text-foreground" />
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      {open && (
+        <div
+          className="
+            md:hidden
+            fixed inset-0 z-50
+            bg-background
+            dark:bg-background
+          "
+        >
+          {/* Top Bar */}
+          <div className="flex items-center justify-between h-16 px-4 border-b border-border">
+            <span className="text-lg font-bold text-foreground">Menu</span>
+            <button
+              className="p-2 rounded-lg hover:bg-muted"
+              onClick={() => setOpen(false)}
+              aria-label="Close menu"
+            >
+              <X className="w-6 h-6 text-foreground" />
+            </button>
+          </div>
+
+          {/* Menu Content */}
+          <nav
+            className="
+              flex flex-col items-center gap-6 px-6 py-10 text-center
+              bg-background/95 dark:bg-background/95
+              backdrop-blur-xl
+            "
+          >
+            {navLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                className="text-lg font-medium text-foreground hover:text-primary transition-colors"
+                onClick={() => setOpen(false)}
+              >
+                {link.label}
+              </a>
+            ))}
+
+            {/* Mobile Actions */}
+            <div className="w-full max-w-sm pt-8 border-t border-border flex flex-col gap-3">
+              {/* <ThemeToggle /> */}
+
+              <Button
+                variant="ghost"
+                className="w-full text-foreground bg-muted/90 hover:bg-muted/80"
+              >
+                Sign In
+              </Button>
+
+              <Button className="w-full rounded-xl font-semibold">
+                Join Premium
+              </Button>
+            </div>
+          </nav>
+        </div>
+      )}
     </header>
-  )
+  );
 }
