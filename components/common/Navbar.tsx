@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Compass, Menu, X } from "lucide-react";
+import { Compass, Menu, PlaneTakeoff, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ThemeToggle from "./ThemeToggle";
+import Link from "next/link";
 
 const navLinks = [
   { label: "Destinations", href: "#" },
@@ -21,10 +22,12 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <div className="flex items-center gap-3 shrink-0">
-            <Compass className="w-7 h-7 text-primary" />
-            <span className="text-xl font-bold tracking-tight text-foreground whitespace-nowrap">
-              Travel Buddy
-            </span>
+            <Link href="/" className="inline-flex items-center gap-3">
+              <PlaneTakeoff className="w-7 h-7 text-primary" />
+              <span className="text-xl font-bold tracking-tight text-foreground whitespace-nowrap">
+                Travel Buddy
+              </span>
+            </Link>
           </div>
 
           {/* Desktop Nav */}
@@ -45,12 +48,14 @@ export default function Navbar() {
             <ThemeToggle />
 
             {/* Desktop-only buttons */}
-            <Button
-              variant="ghost"
-              className="hidden md:inline-flex text-foreground bg-muted/80 hover:bg-muted/40 font-semibold"
-            >
-              Sign In
-            </Button>
+            <Link href="/login">
+              <Button
+                variant="ghost"
+                className="hidden md:inline-flex text-foreground bg-muted/80 hover:bg-muted/40 font-semibold"
+              >
+                Sign In
+              </Button>
+            </Link>
 
             <Button className="hidden md:inline-flex rounded-xl font-semibold">
               Join Premium
@@ -112,13 +117,14 @@ export default function Navbar() {
             {/* Mobile Actions */}
             <div className="w-full max-w-sm pt-8 border-t border-border flex flex-col gap-3">
               {/* <ThemeToggle /> */}
-
-              <Button
-                variant="ghost"
-                className="w-full text-foreground bg-muted/90 hover:bg-muted/80"
-              >
-                Sign In
-              </Button>
+              <Link href="/login">
+                <Button
+                  variant="ghost"
+                  className="w-full text-foreground bg-muted/90 hover:bg-muted/80"
+                >
+                  Sign In
+                </Button>
+              </Link>
 
               <Button className="w-full rounded-xl font-semibold">
                 Join Premium

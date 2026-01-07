@@ -5,7 +5,8 @@ import {
   Globe,
   Camera,
   Mail,
-  LucideIcon
+  LucideIcon,
+  PlaneTakeoff
 } from "lucide-react"
 
 export default function Footer() {
@@ -18,7 +19,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="col-span-2 flex flex-col gap-4">
             <div className="flex items-center gap-2">
-              <Compass className="w-6 h-6 text-primary" />
+              <PlaneTakeoff className="w-6 h-6 text-primary" />
               <span className="text-xl font-bold text-foreground">
                 Travel Buddy
               </span>

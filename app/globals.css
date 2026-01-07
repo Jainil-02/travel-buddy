@@ -92,7 +92,10 @@
   h3,
   h4,
   h5,
-  h6 {
+  h6,
+  p,
+  span,
+  a {
     @apply font-display;
   }
 
@@ -111,3 +114,22 @@
   display: none;             /* Chrome, Safari */
 }
 }
+
+@keyframes slide-in-left {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.animate-slide-in-left {
+  animation: slide-in-left 0.25s ease-out;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.25s ease-out;
+}
+

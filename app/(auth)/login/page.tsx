@@ -1,33 +1,37 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Image from "next/image"
-import Link from "next/link"
+import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import {
   Compass,
   Eye,
   EyeOff,
   Star,
   MapPin,
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+  PlaneTakeoff,
+  Mail,
+  Lock,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export default function LoginPage() {
-  const [showPassword, setShowPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className="flex min-h-screen w-full overflow-hidden bg-background text-foreground">
-      
       {/* LEFT: FORM */}
-      <div className="flex w-full flex-col justify-between px-6 py-8 lg:w-1/2 lg:px-20 xl:px-32">
-        
+      <div className="flex w-full flex-col justify-between px-6 py-8 lg:w-1/2 lg:px-16 xl:px-28">
         {/* Logo */}
+
         <div className="flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
-            <Compass className="w-6 h-6" />
-          </div>
-          <span className="text-xl font-bold">Travel Buddy</span>
+          <Link href="/" className="inline-flex items-center gap-3">
+            <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <PlaneTakeoff className="w-6 h-6" />
+            </div>
+            <span className="text-xl font-bold">Travel Buddy</span>
+          </Link>
         </div>
 
         {/* Content */}
@@ -42,39 +46,45 @@ export default function LoginPage() {
           </div>
 
           <form className="flex w-full max-w-md flex-col gap-6">
-            
             {/* Email */}
-            <div className="flex flex-col gap-2">
-              <label className="font-medium">Email or Username</label>
-              <Input
-                type="email"
-                placeholder="Enter your email"
-                className="h-14 rounded-xl"
-              />
+            <div>
+              <label className=" text-sm  font-medium">Email or Username</label>
+              <div className="relative mt-1">
+                <Mail className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
+                <Input
+                  type="email"
+                  placeholder="Enter your email"
+                  className="pl-10 h-12 rounded-xl"
+                />
+              </div>
             </div>
 
             {/* Password */}
-            <div className="flex flex-col gap-2">
-              <label className="font-medium">Password</label>
+            <div>
+              <label className="text-sm font-medium">Password</label>
               <div className="relative">
-                <Input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
-                  className="h-14 rounded-xl pr-12"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary"
-                >
-                  {showPassword ? (
-                    <EyeOff className="w-5 h-5" />
-                  ) : (
-                    <Eye className="w-5 h-5" />
-                  )}
-                </button>
+                <div className="relative mt-1">
+                  <Lock className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
+
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter your password"
+                    className="pl-10 h-12 rounded-xl"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
+                  </button>
+                </div>
               </div>
-              <div className="flex justify-end">
+              <div className="flex justify-end mt-2">
                 <Link
                   href="#"
                   className="text-sm font-medium text-primary hover:underline"
@@ -127,7 +137,10 @@ export default function LoginPage() {
         {/* Footer */}
         <div className="text-sm text-muted-foreground">
           New here?{" "}
-          <Link href="/register" className="font-bold text-primary hover:underline">
+          <Link
+            href="/register"
+            className="font-semibold text-primary hover:underline"
+          >
             Create an account
           </Link>
         </div>
@@ -136,7 +149,6 @@ export default function LoginPage() {
       {/* RIGHT: HERO (Desktop only) */}
       <div className="relative hidden w-1/2 lg:flex">
         <div className="absolute inset-4 overflow-hidden rounded-3xl">
-          
           <Image
             src="/images/loginBG.png"
             alt="Traveler exploring canyon at sunset"
@@ -149,10 +161,15 @@ export default function LoginPage() {
 
           {/* Content */}
           <div className="absolute bottom-0 p-12 text-white">
-            <blockquote className="mb-6 max-w-lg text-2xl font-medium leading-relaxed">
-              “Travel Buddy made planning my 3-month trip across Asia seamless.”
-            </blockquote>
-
+            <h3 className="text-4xl font-bold leading-tight mb-4 max-w-lg">
+              <blockquote>
+                “The best way to predict the future is to create it.”
+              </blockquote>
+            </h3>
+            <p className="text-lg text-gray-300 max-w-md">
+              Experience the future of travel with personalized itineraries
+              crafted just for you.
+            </p>
           </div>
 
           {/* Location */}
@@ -165,5 +182,5 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

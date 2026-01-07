@@ -2,7 +2,15 @@
 
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Search, Plane, Sparkles, Globe, MessageCircle } from "lucide-react";
+import {
+  Search,
+  Plane,
+  Sparkles,
+  Globe,
+  MessageCircle,
+  PlaneTakeoff,
+} from "lucide-react";
+import Link from "next/link";
 
 export default function HeroSection() {
   return (
@@ -80,8 +88,9 @@ export default function HeroSection() {
               </div>
 
               {/* Button */}
-              <Button
-                className="
+              <Link href="/assistant">
+                <Button
+                  className="
                   h-12
                   w-12 md:w-auto
                   px-0 md:px-6
@@ -91,10 +100,11 @@ export default function HeroSection() {
                   flex items-center justify-center gap-2
                   shrink-0
                 "
-              >
-                <Plane className="w-5 h-5" />
-                <span className="hidden md:inline">Plan Trip</span>
-              </Button>
+                >
+                  <PlaneTakeoff className="w-5 h-5" />
+                  <span className="hidden md:inline">Plan Trip</span>
+                </Button>
+              </Link>
             </div>
           </div>
 
@@ -108,10 +118,12 @@ export default function HeroSection() {
               icon={<Globe className="w-4 h-4 text-blue-300" />}
               label="Explore Map"
             />
-            <ActionButton
-              icon={<MessageCircle className="w-4 h-4 text-green-300" />}
-              label="Ask Assistant"
-            />
+            <Link href="/assistant">
+              <ActionButton
+                icon={<MessageCircle className="w-4 h-4 text-green-300" />}
+                label="Ask Assistant"
+              />
+            </Link>
           </div>
         </div>
       </div>

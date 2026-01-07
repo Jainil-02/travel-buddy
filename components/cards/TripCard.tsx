@@ -40,7 +40,7 @@ export default function TripCard({
         </div>
 
         {/* Match */}
-        <div className="absolute bottom-3 left-3 bg-primary/90 px-3 py-1.5 rounded-lg">
+        <div className="absolute items-center justify-center bottom-3 left-3 bg-primary/90 px-3 py-1.5 rounded-3xl">
           <span className="text-xs font-bold text-primary-foreground uppercase tracking-wide">
             {match} Match
           </span>
