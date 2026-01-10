@@ -12,7 +12,7 @@ export default function ItineraryPanel() {
     <div className="flex h-full w-full flex-col bg-card">
 
       {/* Header */}
-      <div className="p-6 border-b border-border flex items-center justify-between">
+      <div className="p-5 border-b border-border flex items-center justify-between">
         <h3 className="text-lg font-bold text-foreground">
           Draft Itinerary
         </h3>

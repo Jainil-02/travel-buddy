@@ -1,6 +1,7 @@
 "use client";
 
 import { LucideIcon } from "lucide-react";
+import Link from "next/link";
 
 interface FeatureCardProps {
   icon: LucideIcon;
@@ -8,12 +9,14 @@ interface FeatureCardProps {
   description: string;
   iconBgClass?: string;
   iconColorClass?: string;
+  href?: string;
 }
 
 export default function FeatureCard({
   icon: Icon,
   title,
   description,
+  href,
   iconBgClass = "bg-primary/10",
   iconColorClass = "text-primary",
 }: FeatureCardProps) {
@@ -32,9 +35,10 @@ export default function FeatureCard({
     hover:scale-[1.02]
   "
     >
-      {/* Icon */}
-      <div
-        className={`
+      <Link href={href || "#"}>
+        {/* Icon */}
+        <div
+          className={`
     size-12 rounded-xl
     flex items-center justify-center
     mb-4
@@ -44,15 +48,16 @@ export default function FeatureCard({
     ${iconBgClass}
     ${iconColorClass}
   `}
-      >
-        <Icon className="w-6 h-6" />
-      </div>
+        >
+          <Icon className="w-6 h-6" />
+        </div>
 
-      {/* Content */}
-      <h3 className="font-semibold text-lg text-foreground">{title}</h3>
-      <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
-        {description}
-      </p>
+        {/* Content */}
+        <h3 className="font-semibold text-lg text-foreground">{title}</h3>
+        <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
+          {description}
+        </p>
+      </Link>
     </div>
   );
 }

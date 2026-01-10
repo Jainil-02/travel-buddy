@@ -23,10 +23,13 @@ export default function AssistantLayout() {
 
       {/* Chat Section */}
       <main className="flex flex-1 flex-col min-w-0">
+          <div className="xl:hidden">
+
         <ChatHeader
           onOpenSidebar={() => setSidebarOpen(true)}
           onOpenItinerary={() => setItineraryOpen(true)}
         />
+        </div>
         <ChatArea />
         <ChatInput/>
       </main>

@@ -19,6 +19,7 @@ const features = [
     icon: Bot,
     bg: "bg-blue-500/10",
     color: "text-blue-600 dark:text-blue-400",
+    href: "/planner",
   },
   {
     title: "Explore",
@@ -26,6 +27,7 @@ const features = [
     icon: Compass,
     bg: "bg-purple-500/10",
     color: "text-purple-600 dark:text-purple-400",
+    href: "/",
   },
   {
     title: "Hotels",
@@ -33,6 +35,7 @@ const features = [
     icon: Hotel,
     bg: "bg-orange-500/10",
     color: "text-orange-600 dark:text-orange-400",
+    href: "/",
   },
   {
     title: "Flights",
@@ -40,6 +43,7 @@ const features = [
     icon: Plane,
     bg: "bg-sky-500/10",
     color: "text-sky-600 dark:text-sky-400",
+    href: "/",
   },
   {
     title: "Budget",
@@ -47,6 +51,7 @@ const features = [
     icon: Wallet,
     bg: "bg-green-500/10",
     color: "text-green-600 dark:text-green-400",
+    href: "/",
   },
   {
     title: "Route",
@@ -54,6 +59,7 @@ const features = [
     icon: Route,
     bg: "bg-teal-500/10",
     color: "text-teal-600 dark:text-teal-400",
+    href: "/",
   },
   {
     title: "Packing",
@@ -61,6 +67,7 @@ const features = [
     icon: Luggage,
     bg: "bg-rose-500/10",
     color: "text-rose-600 dark:text-rose-400",
+    href: "/",
   },
   {
     title: "Community",
@@ -68,6 +75,7 @@ const features = [
     icon: Users,
     bg: "bg-indigo-500/10",
     color: "text-indigo-600 dark:text-indigo-400",
+    href: "/",
   },
 ]
 
@@ -94,6 +102,7 @@ export default function FeaturesSection() {
             description={feature.description}
             iconBgClass={feature.bg}
             iconColorClass={feature.color}
+            href={feature.href}
           />
         ))}
       </div>

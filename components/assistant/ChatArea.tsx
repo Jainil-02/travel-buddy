@@ -15,7 +15,7 @@ export default function ChatArea() {
   return (
     <div
       className="flex-1 overflow-y-auto scroll-smooth scrollbar-hide
-      px-4 md:px-6 lg:px-10 py-8 space-y-10"
+      px-4 md:px-6 lg:px-10 py-6 space-y-10"
     >
 
       {/* Welcome State */}
