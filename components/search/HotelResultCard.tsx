@@ -1,4 +1,4 @@
-import Image from "next/image"
+import Image from "next/image";
 import {
   Flame,
   Sparkles,
@@ -7,20 +7,20 @@ import {
   Wifi,
   Waves,
   CheckCircle,
-} from "lucide-react"
+} from "lucide-react";
 
 type Props = {
-  title: string
-  location: string
-  distance: string
-  rating: string
-  price: string
-  oldPrice?: string
-  badges?: string[]
-  image: string
-  featured?: boolean
-  aiPick?: boolean
-}
+  title: string;
+  location: string;
+  distance: string;
+  rating: string;
+  price: string;
+  oldPrice?: string;
+  badges?: string[];
+  image: string;
+  featured?: boolean;
+  aiPick?: boolean;
+};
 
 export default function HotelCard({
   title,
@@ -35,7 +35,7 @@ export default function HotelCard({
   aiPick,
 }: Props) {
   return (
-    <article className="bg-card border border-border hover:border-primary/50 rounded-xl overflow-hidden flex flex-col md:flex-row transition-all group">
+    <article className="bg-card border border-border hover:border-primary/50 rounded-3xl overflow-hidden flex flex-col md:flex-row transition-all group h-full">
       {/* Image */}
       <div className="relative w-full md:w-72 h-48 md:h-auto flex-shrink-0">
         {(featured || aiPick) && (
@@ -55,7 +55,7 @@ export default function HotelCard({
       </div>
 
       {/* Content */}
-      <div className="flex-1 p-5 flex flex-col justify-between">
+      <div className="flex-1 p-6 flex flex-col justify-between">
         <div>
           <div className="flex justify-between items-start mb-2">
             <div>
@@ -115,10 +115,23 @@ export default function HotelCard({
 
       {/* Action */}
       <div className="hidden md:flex flex-col justify-center border-l border-border p-4 w-40 bg-background/50">
-        <button className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-lg text-sm shadow">
-          View Deal
-        </button>
+        <ViewDealButton />
+      </div>
+      {/* Mobile Action */}
+      <div className="mt-4 md:hidden">
+        <ViewDealButton full />
       </div>
     </article>
-  )
+  );
+}
+function ViewDealButton({ full }: { full?: boolean }) {
+  return (
+    <button
+      className={`${
+        full ? "w-full" : "w-full"
+      } bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-3xl text-sm shadow transition`}
+    >
+      View Deal
+    </button>
+  );
 }

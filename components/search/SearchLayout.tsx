@@ -1,11 +1,12 @@
-import SearchHero from "./SearchHero"
-import FiltersSidebar from "./FiltersSideBar"
-import ResultsToolbar from "./ResultsToolbar"
+import SearchHero from "./SearchHero";
+import FiltersSidebar from "./FiltersSideBar";
+import ResultsToolbar from "./ResultsToolbar";
 // import AIInsightBanner from "./AIInsightBanner"
-import ResultsList from "./ResultsSection"
-import FloatingAIButton from "./FloatingAIButton"
-import ComparisonDrawer from "./ComparisonDrawer"
-import ResultsSection from "./ResultsSection"
+import ResultsList from "./ResultsSection";
+import FloatingAIButton from "./FloatingAIButton";
+import ComparisonDrawer from "./ComparisonDrawer";
+import ResultsSection from "./ResultsSection";
+import MobileFiltersSheet from "./MobileFilterSheet";
 
 export default function SearchLayout() {
   return (
@@ -23,17 +24,16 @@ export default function SearchLayout() {
 
           {/* Results */}
           <section className="flex-1 flex flex-col gap-6">
-            {/* <ResultsToolbar />
-            {/* <AIInsightBanner /> */}
-            {/* <ResultsList /> */}
+                        <div className="lg:hidden">
+              <MobileFiltersSheet />
+            </div>
             <ResultsSection />
           </section>
         </div>
       </main>
 
-      {/* Floating / Sticky UI */}
-      {/* <FloatingAIButton /> */}
-      <ComparisonDrawer />
+
+      {/* <ComparisonDrawer /> */}
     </div>
-  )
+  );
 }

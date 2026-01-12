@@ -27,7 +27,7 @@ const features = [
     icon: Compass,
     bg: "bg-purple-500/10",
     color: "text-purple-600 dark:text-purple-400",
-    href: "/",
+    href: "/explorePage",
   },
   {
     title: "Hotels",

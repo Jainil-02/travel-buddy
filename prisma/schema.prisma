@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/*
+  USER
+  - One user can have many trips
+  - Auth handled by Supabase, but we still store user record
+*/
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+
+  trips     Trip[]
+}
+
+/*
+  TRIP
+  - Core entity of Travel Buddy
+  - AI output stored as JSON
+  - Editable & regeneratable
+*/
+model Trip {
+  id            String   @id @default(uuid())
+  userId        String
+
+  destination   String
+  startDate     DateTime?
+  endDate       DateTime?
+  travelers     Int?
+  budget        Int?
+
+  preferences   Json     // interests, pace, etc.
+  aiDraft       Json     // raw AI response
+  itinerary     Json     // enriched & final plan
+
+  status        TripStatus @default(DRAFT)
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user          User @relation(fields: [userId], references: [id])
+}
+
+/*
+  TRIP STATUS
+*/
+enum TripStatus {
+  DRAFT
+  GENERATED
+  CONFIRMED
+}

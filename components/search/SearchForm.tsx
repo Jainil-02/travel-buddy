@@ -7,7 +7,7 @@ export default function SearchForm() {
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 p-2">
       {/* Destination */}
       <div className="lg:col-span-4 group">
-        <div className="flex items-center h-16 rounded-xl bg-background border border-border px-4 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
+        <div className="flex items-center h-16 rounded-3xl bg-background border border-border px-4 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
           <MapPin className="mr-3 text-muted-foreground group-focus-within:text-primary" />
           <div className="flex flex-col flex-1">
             <label className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold">
@@ -24,7 +24,7 @@ export default function SearchForm() {
 
       {/* Dates */}
       <div className="lg:col-span-3 group">
-        <div className="flex items-center h-16 rounded-xl bg-background border border-border px-4 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
+        <div className="flex items-center h-16 rounded-3xl bg-background border border-border px-4 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
           <Calendar className="mr-3 text-muted-foreground group-focus-within:text-primary" />
           <div className="flex flex-col flex-1">
             <label className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold">
@@ -40,7 +40,7 @@ export default function SearchForm() {
 
       {/* Guests */}
       <div className="lg:col-span-3 group">
-        <div className="flex items-center h-16 rounded-xl bg-background border border-border px-4 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
+        <div className="flex items-center h-16 rounded-3xl bg-background border border-border px-4 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
           <User className="mr-3 text-muted-foreground group-focus-within:text-primary" />
           <div className="flex flex-col flex-1">
             <label className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold">
@@ -56,7 +56,7 @@ export default function SearchForm() {
 
       {/* Search CTA */}
       <div className="lg:col-span-2">
-        <button className="h-16 w-full rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-lg shadow-lg shadow-primary/20 flex items-center justify-center gap-2 transition-all">
+        <button className="h-16 w-full rounded-3xl bg-primary hover:bg-primary/90 text-white font-bold text-lg shadow-lg shadow-primary/20 flex items-center justify-center gap-2 transition-all">
           <Search size={20} />
           Search
         </button>

@@ -7,7 +7,7 @@ export default function ExplorePage() {
   return (
     <main className="flex max-w-[1600px] mx-auto w-full">
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:block w-80 border-r border-border bg-background sticky top-[73px] h-[calc(100vh-73px)]">
+      <aside className="hidden lg:block w-80 border-r border-border bg-background sticky h-auto">
         <FiltersSidebar variant="desktop" />
       </aside>
 
