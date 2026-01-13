@@ -14,22 +14,51 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
-export default function ItineraryView() {
+export default function ItineraryView({
+  trip,
+  loading,
+}: {
+  trip: any | null;
+  loading: boolean;
+})
+
+
+ {
+  if (loading) {
+    return (
+      <section className="flex-1 flex items-center justify-center">
+        <p className="text-muted-foreground text-lg">
+          Generating your itinerary...
+        </p>
+      </section>
+    );
+  }
+    if (!trip) {
+    return (
+      <section className="flex-1 flex items-center justify-center">
+        <p className="text-muted-foreground text-lg">
+          Fill the form to generate your trip ✨
+        </p>
+      </section>
+    );
+  }
+  console.log("response in the itineraryvuew page", trip);
+
   return (
     <section className="flex-1 overflow-y-auto scrollbar-hide bg-background relative">
       {/* ================= HERO ================= */}
-      <HeroHeader />
+      <HeroHeader trip={trip} />
 
       {/* ================= CONTENT ================= */}
       <div className="px-6 md:px-12 py-8 max-w-5xl mx-auto space-y-12 pb-24">
         {/* Budget */}
-        <BudgetBreakdown />
+        <BudgetBreakdown cost={trip.cost_estimate} />
 
         {/* Timeline */}
-        <ItineraryTimeline />
+        <ItineraryTimeline itinerary={trip.itinerary} />
 
         {/* Recommended Stays */}
-        <RecommendedStays />
+        <RecommendedStays stays={trip.recommended_stays} />
       </div>
 
       {/* Floating Action Bar */}
@@ -42,32 +71,35 @@ export default function ItineraryView() {
 /* HERO */
 /* ------------------------------------------------------------------ */
 
-function HeroHeader() {
+function HeroHeader({ trip }: { trip: any }) {
+  const heroImage =
+    trip.itinerary?.[0]?.activities?.[0]?.images?.[0] ??
+    "/images/placeholder.jpg";
+
   return (
     <div className="relative w-full h-64 md:h-80 overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent z-10" />
 
-      {/* IMAGE */}
-      <div className="absolute inset-0">
-        <Image
-          src="/images/Kyoto.png"
-          alt="Background"
-          fill
-          priority
-          className="object-cover object-center"
-        />
-      </div>
+      <Image
+        src={heroImage}
+        alt={trip.meta.destination}
+        fill
+        priority
+        className="object-cover object-center"
+      />
 
       <div className="absolute bottom-6 left-8 md:left-12 z-20">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 border border-primary/30 text-white text-xs font-bold mb-3">
-          <CalendarDays className="w-4 h-4" />5 Days • Sep 15 – 20
+          <CalendarDays className="w-4 h-4" />
+          {trip.meta.total_days} Days
         </div>
 
         <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-1">
-          Kyoto, Japan
+          {trip.meta.destination}
         </h1>
+
         <p className="text-muted-foreground font-medium">
-          Culture & Food Trip • Couple
+          {trip.meta.trip_type} Trip • {trip.meta.travelers}
         </p>
       </div>
     </div>
@@ -78,7 +110,7 @@ function HeroHeader() {
 /* BUDGET */
 /* ------------------------------------------------------------------ */
 
-function BudgetBreakdown() {
+function BudgetBreakdown({ cost }: { cost: any }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
       <div className="md:col-span-4 flex justify-between items-center mb-2">
@@ -86,32 +118,18 @@ function BudgetBreakdown() {
           Estimated Cost Breakdown
         </h3>
         <span className="text-primary font-bold text-xl">
-          $2,450{" "}
+          ${cost.total_estimated}
           <span className="text-sm font-normal text-muted-foreground">
+            {" "}
             total
           </span>
         </span>
       </div>
 
-      <BudgetCard title="Flights" amount="$950" percent={40} icon={<Plane />} />
-      <BudgetCard
-        title="Accommodation"
-        amount="$1,050"
-        percent={45}
-        icon={<Hotel />}
-      />
-      <BudgetCard
-        title="Activities"
-        amount="$250"
-        percent={10}
-        icon={<Map />}
-      />
-      <BudgetCard
-        title="Food & Misc"
-        amount="$200"
-        percent={5}
-        icon={<Utensils />}
-      />
+      <BudgetCard title="Flights" amount={cost.breakdown.flights} icon={<Plane />} />
+      <BudgetCard title="Accommodation" amount={cost.breakdown.accommodation} icon={<Hotel />} />
+      <BudgetCard title="Activities" amount={cost.breakdown.activities} icon={<Map />} />
+      <BudgetCard title="Food & Misc" amount={cost.breakdown.food_misc} icon={<Utensils />} />
     </div>
   );
 }
@@ -119,12 +137,10 @@ function BudgetBreakdown() {
 function BudgetCard({
   title,
   amount,
-  percent,
   icon,
 }: {
   title: string;
-  amount: string;
-  percent: number;
+  amount: number;
   icon: React.ReactNode;
 }) {
   return (
@@ -133,13 +149,7 @@ function BudgetCard({
         <span>{title}</span>
         {icon}
       </div>
-      <p className="text-xl font-bold text-foreground">{amount}</p>
-      <div className="h-1.5 bg-muted rounded-full overflow-hidden">
-        <div
-          className="h-full bg-primary rounded-full"
-          style={{ width: `${percent}%` }}
-        />
-      </div>
+      <p className="text-xl font-bold text-foreground">${amount}</p>
     </div>
   );
 }
@@ -148,112 +158,81 @@ function BudgetCard({
 /* TIMELINE */
 /* ------------------------------------------------------------------ */
 
-function ItineraryTimeline() {
+function ItineraryTimeline({ itinerary }: { itinerary: any[] }) {
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h3 className="text-2xl font-bold text-foreground">Your Itinerary</h3>
-        <button className="flex items-center gap-2 px-4 py-2 text-sm text-foreground rounded-lg bg-muted hover:bg-muted/70">
-          <Map className="w-4 h-4" />
-          Map View
-        </button>
-      </div>
+      <h3 className="text-2xl font-bold text-foreground mb-6">
+        Your Itinerary
+      </h3>
 
-      {/* Day 1 */}
-      <DaySection
-        active
-        title="Day 1: Arrival & Southern Higashiyama"
-        date="Sep 15, Friday"
-        activities={[
-          {
-            time: "Morning • 09:00 AM",
-            title: "Fushimi Inari Taisha",
-            desc: "Famous for its thousands of vermilion torii gates.",
-            meta: ["Free Entry", "Moderate Walk"],
-            image: "/images/Fushimi.png",
-          },
-        ]}
-      />
-
-      {/* Day 2 */}
-      <DaySection
-        title="Day 2: Northern Kyoto & Zen Temples"
-        date="Sep 16, Saturday"
-        empty
-      />
+      {itinerary.map((day, idx) => (
+        <DaySection
+          key={day.day}
+          title={`Day ${day.day}: ${day.title}`}
+          active={idx === 0}
+          activities={day.activities}
+        />
+      ))}
     </div>
   );
 }
 
 function DaySection({
   title,
-  date,
   activities,
   active,
-  empty,
 }: {
   title: string;
-  date: string;
-  activities?: any[];
+  activities: any[];
   active?: boolean;
-  empty?: boolean;
 }) {
   return (
     <div className="relative pl-8 md:pl-10 border-l-2 border-border space-y-6">
       <div
-        className={`
-          absolute -left-[9px] top-0 size-[18px] rounded-full
-          ${active ? "bg-primary" : "bg-muted-foreground"}
-          ring-4 ring-background
-        `}
+        className={`absolute -left-[9px] top-0 size-[18px] rounded-full ${
+          active ? "bg-primary" : "bg-muted-foreground"
+        } ring-4 ring-background`}
       />
 
-      <div>
-        <h4 className="text-xl font-bold text-foreground">{title}</h4>
-        <p className="text-sm text-muted-foreground mb-6">{date}</p>
+      <h4 className="text-xl font-bold text-foreground">{title}</h4>
 
-        {empty ? (
-          <div className="border border-dashed border-border bg-muted p-6 rounded-xl text-center">
-            <p className="text-sm text-muted-foreground mb-2">
-              Activities for this day loaded...
-            </p>
-            <button className="text-primary text-sm font-bold hover:underline">
-              View Full Itinerary
-            </button>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {activities?.map((a, i) => (
-              <ActivityCard key={i} {...a} />
-            ))}
-          </div>
-        )}
+      <div className="space-y-4">
+        {activities.map((a, i) => (
+          <ActivityCard key={i} activity={a} />
+        ))}
       </div>
     </div>
   );
 }
 
-function ActivityCard({ title, desc, time, meta, image }: any) {
+function ActivityCard({ activity }: { activity: any }) {
+  const image = activity.images?.[0];
+
   return (
-    <div className="group relative flex flex-col md:flex-row gap-4 p-4 rounded-2xl bg-card border border-border hover:border-primary/40 shadow-sm">
-      <div
-        className="w-full md:w-32 h-32 rounded-xl bg-cover bg-center"
-        style={{ backgroundImage: `url('${image}')` }}
-      />
+    <div className="group relative flex flex-col md:flex-row gap-4 p-4 rounded-2xl bg-card border border-border">
+      {image && (
+        <div
+          className="w-full md:w-32 h-32 rounded-xl bg-cover bg-center"
+          style={{ backgroundImage: `url('${image}')` }}
+        />
+      )}
 
       <div className="flex-1">
         <span className="text-[10px] font-bold uppercase text-primary">
-          {time}
+          {activity.time_of_day} • {activity.duration_hours} hrs
         </span>
-        <h5 className="text-lg font-bold text-foreground mt-1">{title}</h5>
-        <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-          {desc}
+
+        <h5 className="text-lg font-bold text-foreground mt-1">
+          {activity.name}
+        </h5>
+
+        <p className="text-sm text-muted-foreground mt-1">
+          {activity.description}
         </p>
 
         <div className="mt-3 flex gap-4 text-xs text-muted-foreground">
-          {meta?.map((m: string) => (
-            <span key={m}>• {m}</span>
-          ))}
+          <span>• {activity.entry_type}</span>
+          <span>• {activity.intensity}</span>
         </div>
       </div>
 
@@ -268,7 +247,7 @@ function ActivityCard({ title, desc, time, meta, image }: any) {
 /* STAYS */
 /* ------------------------------------------------------------------ */
 
-function RecommendedStays() {
+function RecommendedStays({ stays }: { stays: any[] }) {
   return (
     <div>
       <h3 className="text-2xl font-bold text-foreground mb-6">
@@ -276,40 +255,37 @@ function RecommendedStays() {
       </h3>
 
       <div className="flex overflow-x-auto scrollbar-hide gap-6 pb-4 snap-x">
-        <HotelCard image="/images/KyotoH1.png" name="The Thousand Kyoto" price="$280" rating="4.9" />
-        <HotelCard image="/images/KyotoH2.png" name="Ryokan Sanga" price="$150" rating="4.7" />
-        <HotelCard image="/images/KyotoH3.png" name="Ace Hotel Kyoto" price="$210" rating="4.8" />
+        {stays.map((stay, i) => (
+          <HotelCard key={i} stay={stay} />
+        ))}
       </div>
     </div>
   );
 }
 
-function HotelCard({ image, name, price, rating }: any) {
+
+
+function HotelCard({ stay }: { stay: any }) {
   return (
-    <div className="min-w-[280px] w-[300px] snap-center rounded-2xl bg-card border border-border overflow-hidden group">
-      <div className="relative h-40 overflow-hidden">
-        <Image
-          src={image} // "/hotels/kyoto.jpg"
-          alt={name}
-          fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
-        />
-      </div>{" "}
+    <div className="min-w-[280px] w-[300px] snap-center rounded-2xl bg-card border border-border overflow-hidden">
+      <div className="relative h-40 bg-muted flex items-center justify-center text-sm text-muted-foreground">
+        Hotel Image
+      </div>
+
       <div className="p-4">
         <div className="flex justify-between items-start">
-          <h5 className="font-bold text-foreground">{name}</h5>
+          <h5 className="font-bold text-foreground">{stay.area}</h5>
           <span className="flex items-center gap-1 text-yellow-500 text-xs font-bold">
-            <Star className="w-4 h-4 fill-current" /> {rating}
+            <Star className="w-4 h-4 fill-current" />
+            {stay.rating_expectation}
           </span>
         </div>
+
         <div className="flex justify-between items-center mt-4">
           <span className="font-bold text-foreground">
-            {price}
+            ${stay.price_range_per_night.min}
             <span className="text-xs text-muted-foreground"> /night</span>
           </span>
-          <button className="px-3 py-1.5 rounded-3xl bg-primary/10 text-primary text-xs font-bold hover:bg-primary hover:text-primary-foreground">
-            Book Now
-          </button>
         </div>
       </div>
     </div>

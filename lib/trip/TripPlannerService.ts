@@ -20,42 +20,64 @@ export class TripPlannerService {
 
   /**
    * Generates a full trip plan enriched with images
+   * Includes retry logic for AI instability
    */
   async planTrip(
     input: AIPlannerInput
   ): Promise<EnrichedTripPlan> {
-    // 1. Get AI itinerary (validated)
-    const aiPlan =
-      await this.aiProvider.generateItinerary(input)
+    const MAX_ATTEMPTS = 2
+    let lastError: unknown = null
 
-    // 2. Enrich itinerary with images
-    const enrichedItinerary = await Promise.all(
-      aiPlan.itinerary.map(async (day) => {
-        const enrichedActivities: EnrichedActivity[] =
-          await Promise.all(
-            day.activities.map(async (activity) => {
-              const images =
-                await this.imageProvider.getImages(
-                  `${activity.name} ${aiPlan.meta.destination}`
-                )
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+      try {
+        console.log(`🧠 AI planning attempt ${attempt}/${MAX_ATTEMPTS}`)
 
-              return {
-                ...activity,
-                images,
-              }
-            })
-          )
+        // 1️⃣ Get AI itinerary (validated)
+        const aiPlan =
+          await this.aiProvider.generateItinerary(input)
 
+        // 2️⃣ Enrich itinerary with images
+        const enrichedItinerary = await Promise.all(
+          aiPlan.itinerary.map(async (day) => {
+            const enrichedActivities: EnrichedActivity[] =
+              await Promise.all(
+                day.activities.map(async (activity) => {
+                  const images =
+                    await this.imageProvider.getImages(
+                      `${activity.name} ${aiPlan.meta.destination}`
+                    )
+
+                  return {
+                    ...activity,
+                    images,
+                  }
+                })
+              )
+
+            return {
+              ...day,
+              activities: enrichedActivities,
+            }
+          })
+        )
+
+        // ✅ Success → return immediately
         return {
-          ...day,
-          activities: enrichedActivities,
+          ...aiPlan,
+          itinerary: enrichedItinerary,
         }
-      })
-    )
-
-    return {
-      ...aiPlan,
-      itinerary: enrichedItinerary,
+      } catch (error) {
+        lastError = error
+        console.warn(
+          `⚠️ AI attempt ${attempt} failed:`,
+          (error as Error)?.message
+        )
+      }
     }
+
+    // ❌ All retries failed
+    throw new Error(
+      `All AI attempts failed. Last error: ${(lastError as Error)?.message}`
+    )
   }
 }

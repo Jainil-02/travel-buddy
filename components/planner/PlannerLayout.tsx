@@ -1,18 +1,49 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { SlidersHorizontal } from "lucide-react"
+import { useState } from "react";
+import { SlidersHorizontal } from "lucide-react";
 
-import PlannerForm from "./PlannerForm"
-import ItineraryView from "./ItineraryView"
-import FullScreenDrawer from "./FullScreenDrawer"
+import PlannerForm from "./PlannerForm";
+import ItineraryView from "./ItineraryView";
+import FullScreenDrawer from "./FullScreenDrawer";
+import { TripPlanResponse } from "@/types/trip";
 
 export default function PlannerLayout() {
-  const [openForm, setOpenForm] = useState(false)
+  const [openForm, setOpenForm] = useState(false);
+
+  const [tripData, setTripData] = useState<TripPlanResponse | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleGenerateTrip(formData: any) {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const res = await fetch("/api/trips/plan", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to generate itinerary");
+      }
+
+      const data: TripPlanResponse = await res.json();
+      setTripData(data);
+    } catch (err: any) {
+      setError(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+      setOpenForm(false);
+    }
+  }
 
   return (
     <div className="relative flex h-[calc(100vh-64px)] bg-background overflow-hidden">
-
       {/* LEFT – FORM (≥1024px) */}
       <aside
         className="
@@ -24,12 +55,12 @@ export default function PlannerLayout() {
           scrollbar-hide
         "
       >
-        <PlannerForm />
+        <PlannerForm onSubmit={handleGenerateTrip} loading={loading} />
       </aside>
 
       {/* RIGHT – ITINERARY */}
       <main className="flex-1 overflow-y-auto scrollbar-hide relative">
-        <ItineraryView />
+        <ItineraryView trip={tripData} loading={loading} error={error} />
 
         {/* Mobile / Tablet Button */}
         <button
@@ -56,9 +87,9 @@ export default function PlannerLayout() {
           title="Plan your trip"
           onClose={() => setOpenForm(false)}
         >
-          <PlannerForm />
+          <PlannerForm onSubmit={handleGenerateTrip} loading={loading} />
         </FullScreenDrawer>
       )}
     </div>
-  )
+  );
 }

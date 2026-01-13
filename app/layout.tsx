@@ -5,6 +5,7 @@ import ReduxProvider from "@/store/provider";
 import Navbar from "@/components/common/Navbar";
 import { ThemeProvider } from "@/components/common/ThemeProvider";
 import Footer from "@/components/common/Footer";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,7 +48,7 @@ export default function RootLayout({
           <ReduxProvider>
 
             <main className="flex-1 overflow-x-hidden">{children}</main>
-
+            <Toaster position="top-right" />
           </ReduxProvider>
         </ThemeProvider>
       </body>
