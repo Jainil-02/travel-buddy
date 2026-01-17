@@ -30,14 +30,32 @@ STRICT TRIP INPUT:
   "mustVisit": ${JSON.stringify(input.mustVisit ?? [])}
 }
 
-IMPORTANT SEMANTIC RULES:
+IMPORTANT SEMANTIC GUIDELINES (BEST-EFFORT):
 - "trip_type" MUST describe the EXPERIENCE or THEME of the trip
   (e.g. "Culture & Food Getaway", "Relaxed Cultural Exploration")
 - "trip_type" MUST NOT repeat traveler type
-- "theme" MUST be a human-readable UI label
-  (e.g. "Cultural Exploration", "Local Food & Markets", "Nature & Relaxation")
+
+- "theme" MUST be a short, human-readable UI label
+  (e.g. "Cultural Exploration", "Local Food & Markets")
+
 - "total_days" MUST exactly match the provided totalDays value
+
+- For EACH day in the itinerary:
+  - Aim to include 2–4 activities where possible
+  - Prefer famous landmarks, iconic attractions, or well-known local highlights
+  - Balance activities across time_of_day values
+
+- If information is limited for a day:
+  - Include light exploration, neighborhoods, cafes, or walking experiences
+
 - Cost breakdown should feel realistic for the destination and trip style
+
+- When recommending stays:
+  - Aim to suggest 3–5 options across different areas when possible
+  - You MAY mention well-known hotel names inside "why_recommended"
+
+NOTE:
+These are guidance rules. If uncertain, ALWAYS prioritize schema correctness.
 
 REQUIRED OUTPUT JSON SCHEMA (FOLLOW EXACTLY):
 

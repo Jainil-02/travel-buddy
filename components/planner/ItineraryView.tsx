@@ -62,7 +62,7 @@ export default function ItineraryView({
       </div>
 
       {/* Floating Action Bar */}
-      {/* <FloatingActions /> */}
+      <FloatingActions />
     </section>
   );
 }

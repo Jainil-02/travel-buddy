@@ -5,6 +5,8 @@ import { SlidersHorizontal } from "lucide-react";
 
 import PlannerForm from "./PlannerForm";
 import ItineraryView from "./ItineraryView";
+import ItineraryEmptyState from "./ItineraryEmptyState";
+import ItinerarySkeleton from "./ItinerarySkeletonState";
 import FullScreenDrawer from "./FullScreenDrawer";
 import { TripPlanResponse } from "@/types/trip";
 
@@ -22,9 +24,7 @@ export default function PlannerLayout() {
 
       const res = await fetch("/api/trips/plan", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
@@ -60,7 +60,21 @@ export default function PlannerLayout() {
 
       {/* RIGHT – ITINERARY */}
       <main className="flex-1 overflow-y-auto scrollbar-hide relative">
-        <ItineraryView trip={tripData} loading={loading} error={error} />
+        {/* 🔄 STATE PRIORITY ORDER (IMPORTANT) */}
+
+        {loading && <ItinerarySkeleton />}
+
+        {!loading && error && (
+          <div className="mx-auto mt-12 max-w-xl rounded-xl border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive text-center">
+            Failed to generate itinerary. Please try again.
+          </div>
+        )}
+
+        {!loading && !tripData && !error && <ItineraryEmptyState />}
+
+        {!loading && tripData && (
+          <ItineraryView trip={tripData} />
+        )}
 
         {/* Mobile / Tablet Button */}
         <button

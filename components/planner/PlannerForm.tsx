@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import toast from "react-hot-toast";
+import { useState, useEffect, useRef } from "react";
+import { toast } from "react-toastify";
 import * as Slider from "@radix-ui/react-slider";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
@@ -33,8 +33,9 @@ export default function PlannerForm({
 
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
-  const [activeCalendar, setActiveCalendar] =
-    useState<"start" | "end" | null>(null);
+  const [activeCalendar, setActiveCalendar] = useState<"start" | "end" | null>(
+    null
+  );
 
   const [travelers, setTravelers] = useState<
     "Solo" | "Couple" | "Family" | "Friends" | null
@@ -47,6 +48,8 @@ export default function PlannerForm({
   const [mustVisit, setMustVisit] = useState<string[]>([]);
 
   const [mustVisitInput, setMustVisitInput] = useState("");
+
+  const calendarRef = useRef<HTMLDivElement | null>(null);
 
   /* -------------------- VALIDATION -------------------- */
   function validate(): boolean {
@@ -92,9 +95,7 @@ export default function PlannerForm({
   /* -------------------- HELPERS -------------------- */
   function toggleInterest(label: string) {
     setInterests((prev) =>
-      prev.includes(label)
-        ? prev.filter((i) => i !== label)
-        : [...prev, label]
+      prev.includes(label) ? prev.filter((i) => i !== label) : [...prev, label]
     );
   }
 
@@ -115,9 +116,27 @@ export default function PlannerForm({
   /* ------------------------------------------------------------------ */
   /* UI (UNCHANGED STRUCTURE) */
   /* ------------------------------------------------------------------ */
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        calendarRef.current &&
+        !calendarRef.current.contains(e.target as Node)
+      ) {
+        setActiveCalendar(null);
+      }
+    }
+
+    if (activeCalendar) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [activeCalendar]);
 
   return (
-    <aside className="w-full lg:w-[480px] shrink-0 border-r border-border bg-background overflow-y-auto scrollbar-hide z-10 flex flex-col">
+    <aside className="w-full h-full shrink-0 flex flex-col overflow-x-hidden">
       <div className="p-6 pb-20 space-y-10">
         {/* Headline */}
         <div>
@@ -131,7 +150,9 @@ export default function PlannerForm({
 
         {/* Destination */}
         <div className="space-y-3">
-          <label className="text-sm font-medium text-foreground">Where to?</label>
+          <label className="text-sm font-medium text-foreground">
+            Where to?
+          </label>
           <div className="flex rounded-xl overflow-hidden border border-border bg-muted">
             <input
               value={destination}
@@ -164,25 +185,47 @@ export default function PlannerForm({
           </div>
 
           {activeCalendar && (
-            <div className="absolute z-50 mt-2 bg-card border border-border rounded-xl p-3">
-<DayPicker
-  mode="single"
-  selected={activeCalendar === "start" ? startDate : endDate}
-  onSelect={(date) => {
-    if (activeCalendar === "start") setStartDate(date ?? null);
-    if (activeCalendar === "end") setEndDate(date ?? null);
-    setActiveCalendar(null);
-  }}
-  classNames={{
-    months: "text-foreground",
-    caption: "text-foreground font-bold",
-    day: "text-foreground hover:bg-primary/20 rounded-md",
-    day_selected: "bg-primary text-primary-foreground",
-    day_today: "border border-primary",
-    nav_button: "text-foreground hover:bg-muted rounded-md",
-  }}
-/>
+            <div
+              ref={calendarRef}
+              className="absolute z-50 mt-2 bg-card border border-border rounded-xl p-3"
+            >
+              <DayPicker
+                mode="single"
+                selected={activeCalendar === "start" ? startDate : endDate}
+                disabled={
+                  activeCalendar === "start"
+                    ? { before: new Date() }
+                    : {
+                        before: startDate
+                          ? new Date(startDate.getTime() + 24 * 60 * 60 * 1000)
+                          : new Date(),
+                      }
+                }
+                onSelect={(date) => {
+                  if (!date) return;
 
+                  if (activeCalendar === "start") {
+                    setStartDate(date);
+                    if (endDate && endDate <= date) {
+                      setEndDate(null); // reset invalid end date
+                    }
+                  }
+
+                  if (activeCalendar === "end") {
+                    setEndDate(date);
+                  }
+
+                  setActiveCalendar(null);
+                }}
+                classNames={{
+                  months: "text-foreground",
+                  caption: "text-foreground font-bold",
+                  day: "text-foreground hover:bg-primary/20 rounded-md",
+                  day_selected: "bg-primary text-primary-foreground",
+                  day_today: "border border-primary",
+                  nav_button: "text-foreground hover:bg-muted rounded-md",
+                }}
+              />
             </div>
           )}
         </div>
@@ -212,6 +255,7 @@ export default function PlannerForm({
         </div>
 
         {/* Budget */}
+        {/* Budget */}
         <div className="space-y-3">
           <div className="flex justify-between">
             <label className="text-sm font-medium text-foreground">
@@ -227,13 +271,18 @@ export default function PlannerForm({
             max={10000}
             step={100}
             value={budget}
+            defaultValue={[1000, 3000]}
             onValueChange={(v) => setBudget(v as [number, number])}
-            className="relative h-2 rounded-full bg-muted"
+            orientation="horizontal"
+            className="relative flex items-center w-full h-4"
+            minStepsBetweenThumbs={1}
           >
-            <Slider.Track className="absolute h-full w-full bg-muted rounded-full" />
-            <Slider.Range className="absolute h-full bg-primary rounded-full" />
-            <Slider.Thumb className="w-4 h-4 bg-primary rounded-full border-2 border-background shadow" />
-            <Slider.Thumb className="w-4 h-4 bg-primary rounded-full border-2 border-background shadow" />
+            <Slider.Track className="relative w-full h-2 bg-muted rounded-full">
+              <Slider.Range className="absolute h-full bg-primary rounded-full" />
+            </Slider.Track>
+
+            <Slider.Thumb className="block w-4 h-4 bg-primary rounded-full border-2 border-background shadow focus:outline-none focus:ring-2 focus:ring-primary" />
+            <Slider.Thumb className="block w-4 h-4 bg-primary rounded-full border-2 border-background shadow focus:outline-none focus:ring-2 focus:ring-primary" />
           </Slider.Root>
 
           <div className="flex justify-between text-xs text-muted-foreground font-medium">

@@ -1,20 +1,5 @@
-// types/api.ts (optional but recommended)
-export interface TripPlanRequest {
-  destination: string;
-  startDate: string;
-  endDate: string;
-  travelers: "Solo" | "Couple" | "Family" | "Friends";
-  budgetRange: string;
-  pace: "Relaxed" | "Moderate" | "Fast";
-  interests: string[];
-  mustVisit?: string[];
-}
-
-// app/api/trip/plan/route.ts
 import { NextRequest, NextResponse } from "next/server";
 
-import { GeminiProvider } from "@/lib/ai/GeminiProvider";
-import { OpenAIProvider } from "@/lib/ai/OpenAIProvider";
 import { GroqProvider } from "@/lib/ai/GroqProvider";
 import { TripPlannerService } from "@/lib/trip/TripPlannerService";
 import { UnsplashProvider } from "@/lib/images/UnsplashProvider";
@@ -36,7 +21,7 @@ export async function POST(req: NextRequest) {
       mustVisit,
     } = body;
 
-    // 2️⃣ Basic validation (lightweight on purpose)
+    // 2️⃣ Basic validation (keep it lightweight)
     if (
       !destination ||
       !startDate ||
@@ -75,16 +60,17 @@ export async function POST(req: NextRequest) {
     };
 
     // 5️⃣ Create services
-    // const aiProvider = new GeminiProvider();
-    // const aiProvider = new OpenAIProvider();
     const aiProvider = new GroqProvider();
     const imageProvider = new UnsplashProvider();
-    const tripPlanner = new TripPlannerService(aiProvider, imageProvider);
+    const tripPlanner = new TripPlannerService(
+      aiProvider,
+      imageProvider
+    );
 
-    // 6️⃣ Generate trip plan
+    // 6️⃣ Generate trip plan (this also saves to DB)
     const tripPlan = await tripPlanner.planTrip(aiInput);
 
-    // 7️⃣ Return response
+    // 7️⃣ Return response (THIS is where NextResponse.json goes)
     return NextResponse.json(tripPlan, { status: 200 });
   } catch (error: any) {
     console.error("Trip planning failed:", error);

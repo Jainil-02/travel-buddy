@@ -6,8 +6,8 @@ import { buildGeminiPrompt } from "./prompts";
 import { AIItinerarySchema } from "@/types/ai-itinerary.schema";
 
 const MODELS = [
-  "llama-3.1-70b-versatile",
   "llama-3.1-8b-instant",
+  "mixtral-8x7b-32768",
 ];
 
 export class GroqProvider implements AIProvider {

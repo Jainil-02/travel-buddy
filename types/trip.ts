@@ -1,5 +1,6 @@
 // types/trip.ts
 export interface TripPlanResponse {
+  tripId: string
   meta: {
     destination: string
     trip_type: string

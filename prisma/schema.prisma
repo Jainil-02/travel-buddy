@@ -7,53 +7,56 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/*
-  USER
-  - One user can have many trips
-  - Auth handled by Supabase, but we still store user record
-*/
+/**
+ * USER
+ * - One user can have many trips
+ * - Auth handled by Supabase, but we still store user record
+ */
 model User {
   id        String   @id @default(uuid())
   email     String   @unique
   name      String?
   createdAt DateTime @default(now())
 
-  trips     Trip[]
+  trips Trip[]
 }
 
-/*
-  TRIP
-  - Core entity of Travel Buddy
-  - AI output stored as JSON
-  - Editable & regeneratable
-*/
+/**
+ * TRIP
+ * - Core entity of Travel Buddy
+ * - AI output stored as JSON
+ * - Editable & regeneratable
+ */
 model Trip {
-  id            String   @id @default(uuid())
-  userId        String
+  id String @id @default(uuid())
 
-  destination   String
-  startDate     DateTime?
-  endDate       DateTime?
-  travelers     Int?
-  budget        Int?
+  // 🔑 Relation (optional for anonymous trips)
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
 
-  preferences   Json     // interests, pace, etc.
-  aiDraft       Json     // raw AI response
-  itinerary     Json     // enriched & final plan
+  status TripStatus @default(DRAFT)
 
-  status        TripStatus @default(DRAFT)
+  destination String
+  startDate   DateTime
+  endDate     DateTime
+  travelers   String
+  budgetRange String?
+  pace        String?
+  interests   Json?
+  mustVisit   Json?
 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  itinerary Json
 
-  user          User @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }
 
-/*
-  TRIP STATUS
-*/
+/**
+ * TRIP STATUS
+ */
 enum TripStatus {
   DRAFT
-  GENERATED
-  CONFIRMED
+  SAVED
 }

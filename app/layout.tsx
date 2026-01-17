@@ -6,6 +6,8 @@ import Navbar from "@/components/common/Navbar";
 import { ThemeProvider } from "@/components/common/ThemeProvider";
 import Footer from "@/components/common/Footer";
 import { Toaster } from "react-hot-toast";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -46,9 +48,24 @@ export default function RootLayout({
       >
         <ThemeProvider>
           <ReduxProvider>
-
             <main className="flex-1 overflow-x-hidden">{children}</main>
-            <Toaster position="top-right" />
+            <ToastContainer
+              position="bottom-center"
+              autoClose={3000}
+              hideProgressBar={true}
+              newestOnTop
+              closeOnClick
+              pauseOnHover
+              draggable
+              theme="auto"
+              toastClassName="
+    mx-auto
+    rounded-xl
+    border-b-4 border-red-500
+    bg-white text-gray-900
+    dark:bg-[#0f0f0f] dark:text-gray-100
+  "
+            />
           </ReduxProvider>
         </ThemeProvider>
       </body>
