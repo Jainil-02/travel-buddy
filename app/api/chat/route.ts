@@ -63,15 +63,16 @@ export async function POST(req: Request) {
 
     // 4️⃣ Call Groq via your existing provider ✅
     const groq = new GroqProvider();
+    
 
     const rawText = await groq.chatCompletion([
       { role: "system", content: CHAT_SYSTEM_PROMPT },
       ...recentContext.map((c) => ({
-        role: "user",
+        role: "user" as const,
         content: c,
       })),
       {
-        role: "user",
+        role: "user" as const,
         content: latestUserMessage.blocks?.[0]?.content ?? "",
       },
     ]);
