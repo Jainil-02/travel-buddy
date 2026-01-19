@@ -7,7 +7,7 @@ import { AIItinerarySchema } from "@/types/ai-itinerary.schema";
 
 const MODELS = [
   "llama-3.1-8b-instant",
-  "mixtral-8x7b-32768",
+  // "mixtral-8x7b-32768",
 ];
 
 export class GroqProvider implements AIProvider {
@@ -21,6 +21,19 @@ export class GroqProvider implements AIProvider {
     this.client = new Groq({
       apiKey: process.env.GROQ_API_KEY,
     });
+  }
+
+  async chatCompletion(messages: { role: "system" | "user"; content: string }[]) {
+    const completion = await this.client.chat.completions.create({
+      model: "llama-3.1-8b-instant",
+      temperature: 0.7,
+      messages,
+    });
+
+    return (
+      completion.choices[0]?.message?.content ??
+      "I couldn’t think of a good answer. Try asking differently."
+    );
   }
 
   async generateItinerary(

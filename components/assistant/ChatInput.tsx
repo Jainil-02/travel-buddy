@@ -1,22 +1,47 @@
+"use client"
+
+import { useState } from "react"
 import { PlusCircle, Mic, Send } from "lucide-react"
 
-export default function ChatInput() {
+export default function ChatInput({
+  onSend,
+}: {
+  onSend: (text: string) => void
+}) {
+  const [value, setValue] = useState("")
+
+  function handleSend() {
+    if (!value.trim()) return
+    onSend(value)
+    setValue("")
+  }
+
   return (
     <div className="px-4 py-5 border-t border-border">
       <div className="max-w-4xl mx-auto flex items-center gap-2 bg-card rounded-full p-1 border border-border shadow-sm">
-        <IconButton><PlusCircle /></IconButton>
+        <IconButton>
+          <PlusCircle />
+        </IconButton>
+
         <input
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSend()}
           className="text-foreground flex-1 bg-transparent outline-none text-sm"
           placeholder="Where do you want to go next?"
         />
-        <IconButton><Mic /></IconButton>
-        <button className="bg-primary text-white p-3 rounded-full">
+
+        <IconButton>
+          <Mic />
+        </IconButton>
+
+        <button
+          onClick={handleSend}
+          className="bg-primary text-white p-3 rounded-full"
+        >
           <Send size={18} />
         </button>
       </div>
-      {/* <p className="text-center text-xs text-muted-foreground mt-2">
-        AI can make mistakes. Verify important details.
-      </p> */}
     </div>
   )
 }
